@@ -28,7 +28,6 @@ public class Blog{
 
     //Bidirectional -> Blog: Image :: Parent: Child :: One: Many
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL)
-    @JoinColumn
     private List<Image> imageList = new ArrayList<>();
 
     //constructor

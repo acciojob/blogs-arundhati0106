@@ -19,7 +19,6 @@ public class User {
     //Mapping
     //bidirectional -> Blog: User :: Child: Parent :: Many: One
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JoinColumn
     private List<Blog> blogList = new ArrayList<>();
 
     //constructor
