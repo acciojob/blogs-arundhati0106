@@ -11,15 +11,15 @@ import java.util.List;
 public class ImageService {
 
     @Autowired
-    BlogRepository blogRepository;
+    BlogRepository blogRepository2;
     @Autowired
-    ImageRepository imageRepository;
+    ImageRepository imageRepository2;
 
     public Image addImage(Integer blogId, String description, String dimensions) {
         //add an image to the blog
 
         //get blog, find by id
-        Blog blog = blogRepository.findById(blogId).get();
+        Blog blog = blogRepository2.findById(blogId).get();
 
         //create entity
         Image image = new Image();
@@ -30,40 +30,34 @@ public class ImageService {
         image.setBlog(blog);
 
         //set attributes of blog
-        blog.getImageList().add(image);
+        List<Image> imageList = blog.getImageList();
+        imageList.add(image);
+        blog.setImageList(imageList);
 
         //save
-        blogRepository.save(blog);
+        blogRepository2.save(blog);
 
         return image;
     }
 
-
     public void deleteImage(Integer id){
-        imageRepository.deleteById(id);
+        imageRepository2.deleteById(id);
     }
 
     public int countImagesInScreen(Integer id, String screenDimensions) {
         //Find the number of images of given dimensions that can fit in a screen having `screenDimensions`
 
         ////get image, find by id
-        Image image = imageRepository.findById(id).get();
+        Image image = imageRepository2.findById(id).get();
 
         //dimensions
-        String[] screenDimensionsArr = screenDimensions.split("X");
-        String[] imageDimensionsArr = image.getDimensions().split("X");
+        String dim = image.getDimensions();
+        String[] imageDim = dim.split("X");
+        String[] screenDim = screenDimensions.split("X");
 
-        int screenLength = Integer.parseInt(screenDimensionsArr[0]);
-        int screenBreadth = Integer.parseInt(screenDimensionsArr[1]);
+        //calculate
+        int count = (Integer.valueOf(screenDim[0])/Integer.valueOf(imageDim[0])) *(Integer.valueOf(screenDim[1])/Integer.valueOf(imageDim[1]));
 
-        int imageLength = Integer.parseInt(imageDimensionsArr[0]);
-        int imageBreadth = Integer.parseInt(imageDimensionsArr[1]);
-
-        int imagesInLength = screenLength/imageLength;
-        int imagesInBreadth = screenBreadth/imageBreadth;
-
-        int totalImages = imagesInLength * imagesInBreadth;
-
-        return totalImages;
+        return count;
     }
 }

@@ -21,31 +21,31 @@ public class BlogService {
     @Autowired
     UserRepository userRepository1;
 
-    public Blog createAndReturnBlog(Integer userId, String title, String content) throws Exception {
-        //create a blog at the current time
+    public Blog createAndReturnBlog(Integer userId, String title, String content)  {
+          //create a blog at the current time
+          //Instant currentInstant = Instant.now();
+            Date currentDate = new Date();
+            Blog blog = new Blog();
 
-        //get user , by id
-        User user = userRepository1.findById(userId).get();
-        if(user == null) {
-            throw new Exception();
+            //find user, by id
+            User user = userRepository1.findById(userId).get();
+
+            //set attributes of blog
+            blog.setTitle(title);
+            blog.setContent(content);
+            blog.setUser(user);
+            blog.setPubDate(currentDate);
+
+            //set attributes of user
+            List<Blog> blogList = user.getBlogList();
+            blogList.add(blog);
+            user.setBlogList(blogList);
+
+            //save
+            userRepository1.save(user);
+
+            return blog;
         }
-
-        //create entity -> for repo to interact with
-        Blog blog = new Blog();
-
-        //set attributes of blog
-        blog.setTitle(title);
-        blog.setContent(content);
-        blog.setUser(user);
-
-        //set attributes of user
-        user.getBlogList().add(blog);
-
-        //save
-        userRepository1.save(user);
-
-        return blog;
-    }
 
     public void deleteBlog(int blogId){
         //delete blog and corresponding images
